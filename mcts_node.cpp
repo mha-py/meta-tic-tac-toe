@@ -48,7 +48,7 @@ int MCTSNode::simulate() {
     State s(state);
     int r = s.getEnded();
     while (r == GOING_ON) {
-      s.random_move();
+      s.RandomMove();
       r = s.getEnded();
     }
     return r;

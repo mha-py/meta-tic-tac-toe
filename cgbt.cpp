@@ -1,3 +1,6 @@
+
+// Dieser Teil wurde von ChatGPT kreiert, als nett fragte, eine Schablone für den MCTS-ALgorithmus zu erstellen.
+
 #include <iostream>
 #include <vector>
 #include <cmath>

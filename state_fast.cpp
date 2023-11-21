@@ -1,5 +1,7 @@
+// QUITE BUGGY AT THE MOMENT
 
-#include "state.h"
+
+#include "state_fast.h"
 #include <iostream>
 #include <cassert>
 
@@ -7,19 +9,24 @@
 State::State() {
   for (int i=0; i<81; i++)
     board[i] = 0;
-  for (int i=0; i<9; i++)
+  for (int i=0; i<9; i++) {
     won[i] = GOING_ON;
+    nsubmoves[i] = 0;
+  }
+  nmoves = 0;
   active_board = -1;
   turn = 1;
 }
 
 
 State::State(const State& other)
-  : active_board(other.active_board), turn(other.turn) {
+  : active_board(other.active_board), turn(other.turn), nmoves(other.nmoves) {
   for (int i = 0; i < 81; i++)
       board[i] = other.board[i];
-  for (int i = 0; i < 9; i++)
+  for (int i = 0; i < 9; i++) {
       won[i] = other.won[i];
+      nsubmoves[i] = other.nsubmoves[i];
+    }
 }
 
 
@@ -37,6 +44,9 @@ void State::NextState(int a) {
 
   // do the move
   board[a] = turn;
+
+  nmoves++;
+  nsubmoves[3*ii+jj]++;
 
   // Check if sub board is won
   if (subboard_is_won(aa, turn)) {
@@ -103,11 +113,65 @@ int State::getEnded() {
 }
 
 
-void State::RandomMove() {
-  ActionList va = getValidActions();
-  int k = std::rand() % va.size();
-  NextState(va[k]);
+Action State::getRandomAction() {
+  // Anzahl an möglichen Aktionen finden
+
+    int k = 0;
+    if (active_board == -1) {
+      for (int a=0; a<81; a++)
+        if (board[a] == 0) {
+          k++;
+        }
+        //std::cout << k << "  " << (81-nmoves) << std::endl;
+        assert(k==(81-nmoves));
+    } else {
+      int ii = active_board / 3;
+      int jj = active_board % 3;
+      for (int i=3*ii; i<3*(ii+1); i++)
+        for (int j=3*jj; j<3*(jj+1); j++)
+          if (board[9*i+j] == 0) {
+            k++;
+          }
+
+        if (k!=(9-nsubmoves[active_board])) {
+          draw();
+          std::cout << k << "   " << 9-nsubmoves[active_board] << std::endl;
+        }
+        assert(k==(9-nsubmoves[active_board]));
+    }
+  int n = k;
+  //std::cout << k << std::endl;
+
+  k = 0;
+  if (active_board == -1) {
+    int r = rand() % n;//(81-nmoves);
+    for (int a=0; a<81; a++)
+      if (board[a] == 0) {
+        if (k == r)
+          return a;
+        k++;
+      }
+  } else {
+    int r = rand() % n;//(9-nsubmoves[active_board]);
+    int ii = active_board / 3;
+    int jj = active_board % 3;
+    for (int i=3*ii; i<3*(ii+1); i++)
+      for (int j=3*jj; j<3*(jj+1); j++)
+        if (board[9*i+j] == 0) {
+          if (k == r)
+            return 9*i+j;
+          k++;
+        }
+  }
+  std::cout << k << std::endl;
+  assert(false);
 }
+
+
+void State::RandomMove() {
+  NextState(getRandomAction());
+}
+
 
 
 void State::draw() {
@@ -144,6 +208,7 @@ void State::draw() {
   else
     std::cout << "      o to move" << std::endl;
 }
+
 
 
 
@@ -196,6 +261,9 @@ void State::fill_subboard(int aa, int player) {
 
   // Fülle das Teilbrett mit dem Spielerwert
   for (int i = 0; i < 3; i++)
-    for (int j = 0; j < 3; j++)
+    for (int j = 0; j < 3; j++) {
+      if (board[9 * (3 * ii + i) + 3 * jj + j] == 0)
+        nmoves += 1;
       board[9 * (3 * ii + i) + 3 * jj + j] = player;
+    }
 }

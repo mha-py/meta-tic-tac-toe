@@ -11,19 +11,22 @@ int MonteCarloTreeSearch::search(int iterations) {
         expandedNode->backpropagate(simulationResult);
     }
     int abest = 0;
+    int nbest = 0;
     double qbest = -99999;
     for (MCTSNode* c : root->children) {
-      double q = c->visits;
-      if (q > qbest) {
+      double q = c->cumScore * (1. / c->visits);
+      double n = c->visits;
+      if (n > nbest) {
         abest = c->action;
+        nbest = n;
         qbest = q;
-
       }
       int i = c->action / 9;
       int j = c->action % 9;
-      //std::cout << i+1 << j+1 << "   " << q << std::endl;
-      std::cout << i+1 << j+1 << "   " << c->cumScore * (1. / c->visits) << "   " << c->visits << std::endl;
+      //std::cout << i+1 << j+1 << "   " << c->cumScore * (1. / c->visits) << "   " << c->visits << std::endl;
     }
+    std::cout << qbest << std::endl;
+
     return abest;
 }
 

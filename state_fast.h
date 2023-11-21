@@ -27,6 +27,8 @@ public:
     int8_t won[9];
     int8_t active_board;
     int8_t turn;
+    int8_t nmoves; // wie viele züge schon gemacht worden sind
+    int8_t nsubmoves[9]; // wie viele züge im subboard schon gemacht worden sind
 
     bool subboard_is_won(int aa, int player);
     bool subboard_is_full(int aa);
