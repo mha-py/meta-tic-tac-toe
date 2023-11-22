@@ -76,7 +76,7 @@ void Game() {
   std::string str;
   while (s.getEnded() == GOING_ON) {
     s.draw();
-    if (s.turn == player) {
+    if (s.turn == player) {  // PLAYER MOVE
       ActionList va = s.getValidActions();
       std::cout << "Choose your move!" << std::endl;
       InputMove:
@@ -101,7 +101,7 @@ void Game() {
         std::cout << "Invalid Move! Try again" << std::endl;
         goto InputMove;
       }
-    } else {
+    } else {  // AI MOVE
       MonteCarloTreeSearch tree(s);
       a = tree.search(n, 1.);
     }
