@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cassert>
 
-
+// Default constructor initializing the game state
 State::State() {
   for (int i=0; i<81; i++)
     board[i] = 0;
@@ -13,7 +13,7 @@ State::State() {
   turn = 1;
 }
 
-
+// Copy constructor for creating a copy of the game state
 State::State(const State& other)
   : active_board(other.active_board), turn(other.turn) {
   for (int i = 0; i < 81; i++)
@@ -23,7 +23,7 @@ State::State(const State& other)
 }
 
 
-
+// Function to advance the game state after a player's move
 void State::NextState(int a) {
   assert(0<=a && a < 81);
   int i = a / 9;
@@ -59,6 +59,7 @@ void State::NextState(int a) {
 
 }
 
+// Function to get a list of valid actions for the current state
 ActionList State::getValidActions() {
   ActionList va;
   if (active_board == -1) {  // no board active -> all empty squares
@@ -79,6 +80,7 @@ ActionList State::getValidActions() {
   return va;
 }
 
+// Function to check if the game has ended and determine the winner
 int State::getEnded() {
   // Zeilen
   for (int ii=0; ii<3; ii++)
@@ -102,14 +104,14 @@ int State::getEnded() {
   return REMIS;
 }
 
-
+// Function to make a random move in the current state
 void State::RandomMove() {
   ActionList va = getValidActions();
   int k = std::rand() % va.size();
   NextState(va[k]);
 }
 
-
+// Function to visualize the current game state
 void State::draw() {
 
   std::cout << "\n+-1-2-3-+-4-5-6-+-7-8-9-+" << std::endl;
@@ -147,7 +149,7 @@ void State::draw() {
 
 
 
-
+// Helper function to check if a subboard is won by a player
 bool State::subboard_is_won(int aa, int player) {
   int ii = aa / 3;
   int jj = aa % 3;
@@ -175,7 +177,7 @@ bool State::subboard_is_won(int aa, int player) {
 }
 
 
-
+// Helper function to check if a subboard is full
 bool State::subboard_is_full(int aa) {
   int ii = aa / 3;
   int jj = aa % 3;
@@ -189,7 +191,7 @@ bool State::subboard_is_full(int aa) {
   return true;
 }
 
-
+// Helper function to fill subboard with a players value
 void State::fill_subboard(int aa, int player) {
   int ii = aa / 3;
   int jj = aa % 3;

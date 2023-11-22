@@ -2,11 +2,11 @@
 #include "mcts_node.h"
 #include <cmath>
 
+// Function to select the best child node based on the UCB1 algorithm
 MCTSNode* MCTSNode::selectChild(double cp) {
-    // Implementiere die Auswahllogik für das beste Kind
-    // Hier könnte zum Beispiel UCB1 verwendet werden
     MCTSNode* cbest = nullptr;
     double ubest = -99999.;
+    // Iterate over children to find the one with the highest UCB1 score
     for (MCTSNode* c : children) {
       double u;
       u = state.turn * c->cumScore * (1. / c->visits);
@@ -20,33 +20,33 @@ MCTSNode* MCTSNode::selectChild(double cp) {
     return cbest;
 }
 
+// Function to expand the current node by adding a new child node
 MCTSNode* MCTSNode::expand() {
-    // Implementiere die Logik für das Hinzufügen eines neuen Kindknotens
-    // return den neu hinzugefügten Kindknoten
+  // Return the current node if it is already terminal
     if (terminal != GOING_ON)
       return this;
 
-    // Zufallszug aus den noch zu expandierenden Züge wählen
+    // Randomly select a move from the remaining unexpanded moves
     int k = rand() % toexpand.size();
     int a = toexpand[k];
     toexpand.erase(toexpand.begin()+k);
 
-    // Neuen Knoten erstellen
+    // Create a new state and node for the selected move
     State s(state);
     s.NextState(a);
     MCTSNode* child = new MCTSNode(s, a, this);
 
-    // ... und zur Liste hinzufügen
+    // Add the new child to the list of children
     children.push_back(child);
 
     return child;
 }
 
+// Function to simulate a game from the current state and return the result
 int MCTSNode::simulate() {
-    // Implementiere die Logik für eine Simulation vom aktuellen Zustand
-    // ...
     State s(state);
     int r = s.getEnded();
+    // Continue making random moves until the game ends
     while (r == GOING_ON) {
       s.RandomMove();
       r = s.getEnded();
@@ -54,10 +54,11 @@ int MCTSNode::simulate() {
     return r;
 }
 
+// Function to backpropagate the simulation results through the tree
 void MCTSNode::backpropagate(double result) {
-    // Implementiere die Logik für das Zurückverfolgen der Simulationsergebnisse
     cumScore += result;
     visits++;
+    // Recursively backpropagate the result to the parent node
     if (parent != nullptr)
       parent->backpropagate(result);
 }
