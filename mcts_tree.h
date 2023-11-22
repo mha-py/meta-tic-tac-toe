@@ -15,11 +15,11 @@ public:
         delete root;
     }
 
-    int search(int iterations);
+    int search(int iterations, double cp);
 
 private:
     MCTSNode* root;
-    MCTSNode* select();
+    MCTSNode* select(double cp);
 };
 
 #endif // MCTS_TREE_H

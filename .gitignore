@@ -3,3 +3,6 @@
 *.out
 analysis2.txt
 analysis.txt
+*.txt
+*.o
+*.dll

@@ -2,7 +2,7 @@
 #include "mcts_node.h"
 #include <cmath>
 
-MCTSNode* MCTSNode::selectChild() {
+MCTSNode* MCTSNode::selectChild(double cp) {
     // Implementiere die Auswahllogik für das beste Kind
     // Hier könnte zum Beispiel UCB1 verwendet werden
     MCTSNode* cbest = nullptr;
@@ -10,7 +10,7 @@ MCTSNode* MCTSNode::selectChild() {
     for (MCTSNode* c : children) {
       double u;
       u = state.turn * c->cumScore * (1. / c->visits);
-      u += 2. * CP * std::sqrt(2.*std::log(1.*visits)/c->visits);
+      u += 2. * cp * std::sqrt(2.*std::log(1.*visits)/c->visits);
       if (u > ubest) {
         cbest = c;
         ubest = u;

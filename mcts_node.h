@@ -31,7 +31,7 @@ public:
     }
 
 
-    MCTSNode* selectChild();
+    MCTSNode* selectChild(double cp);
     MCTSNode* expand();
     int simulate();
     void backpropagate(double result);
