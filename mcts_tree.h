@@ -20,6 +20,8 @@ public:
     // Function to perform the Monte Carlo Tree Search for a specific number of iterations
     int search(int iterations, double cp);
 
+    double Q; // Strength of the positions s
+
 private:
     MCTSNode* root; // Pointer to the root node of the tree
 

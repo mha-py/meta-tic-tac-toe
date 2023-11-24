@@ -12,6 +12,17 @@ extern "C" __declspec(dllexport) int __cdecl MakeMove(int* board, int* won, int 
   return int(mcts.search(n, cp));
 }
 
+extern "C" __declspec(dllexport) double __cdecl GetQ(int* board, int* won, int active_board, int n, double cp) {
+  State s;
+  for (int i=0; i<81; i++)
+    s.board[i] = board[i];
+  for (int i=0; i<9; i++)
+    s.won[i] = won[i];
+  s.active_board = active_board;
+  MonteCarloTreeSearch mcts(s);
+  mcts.Q;
+}
+
 
 
 /*

@@ -31,7 +31,8 @@ int MonteCarloTreeSearch::search(int iterations, double cp) {
       //std::cout << i+1 << j+1 << "   " << c->cumScore * (1. / c->visits) << "   " << c->visits << std::endl;
     }
     //std::cout << qbest << std::endl; // **
-
+    Q = qbest;
+    
     return abest;
 }
 
