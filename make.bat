@@ -1,0 +1,1 @@
+c++ main.cpp state.cpp mcts_node.cpp mcts_tree.cpp -Ofast

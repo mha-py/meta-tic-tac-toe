@@ -7,20 +7,20 @@
 #include "state.h"
 #include "mcts_tree.h"
 
-/*
-float rollout(const State& s0, int n=10) {
+
+float rollout(const State& s0, int n=20) {
   int r = 0;
   for (int i=0; i<n; i++) {
     State s(s0);
     int status = GOING_ON;
     while (status == GOING_ON) {
-      s.random_move();
+      s.RandomMove();
       status = s.getEnded();
     }
     r += status;
   }
   return r * (1.0 / n);
-}*/
+}
 
 
 /*
@@ -58,7 +58,38 @@ double pitagainstrandom(int n = 20) {
 int main()
 {
 
-/*
+
+  // Korrelation Rollout und Q
+  for (int f=0; true; f++) {
+    std::cout << f << std::endl;
+    std::ofstream File("correlations/Corr" + std::to_string(f) + ".txt"); // TODO FPRINT
+
+    State s0;
+    std::vector<State*> states;
+    std::vector<int> actions;
+    while (s0.getEnded() == GOING_ON) {
+      State* scpy = new State(s0);
+      states.push_back(scpy);
+      ActionList va = s0.getValidActions();
+      int k = std::rand() % va.size();
+      int a = va[k];
+      s0.NextState(a);
+      actions.push_back(a);
+    }
+    // Zufälligen Zustand auswählen
+    int k = rand() % states.size();
+    File << k * (1./states.size()) << std::endl;
+    State* s = states[k];
+    MonteCarloTreeSearch tree(*s);
+    tree.search(10000, 1.);
+    File << tree.Q << std::endl;
+    File << rollout(*s, 100) << std::endl;
+    File.close();
+    for (State* s : states)
+      delete s;
+}
+
+
   // Selfplay
   for (int f=0; true; f++) {
     std::ofstream File("games/selfplay" + std::to_string(f) + ".txt"); // TODO FPRINT
@@ -94,7 +125,7 @@ int main()
     File.close();
     for (State* s : states)
       delete s;
-}*/
+}
 
 
   State s;
